@@ -1,0 +1,7 @@
+{% extends 'catalog/base.html' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h2 class="mb-4">Order Placed Successfully!</h2>
+<p>Your books have been ordered. Thank you!</p>
+<a href="{% url 'catalog:index' %}" class="btn btn-primary mt-3">Back to Books</a>
+{% endblock %}

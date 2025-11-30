@@ -1,0 +1,60 @@
+{% extends 'catalog/base.html' %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="mb-4">Your Wishlist</h2>
+
+    {% if items %}
+        <div class="row">
+            {% for item in items %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+
+                    <!-- Book Cover -->
+                    {% if item.book.cover %}
+                        <img src="{{ item.book.cover }}" class="card-img-top" alt="{{ item.book.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/400x500?text=No+Cover" class="card-img-top">
+                    {% endif %}
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">{{ item.book.title }}</h5>
+
+                        <p class="card-text">
+                            <strong>Category:</strong> {{ item.book.category.name }} <br>
+                            <strong>ISBN:</strong> {{ item.book.isbn }}
+                        </p>
+
+                        <div class="d-flex justify-content-between">
+
+                            <!-- Add to Cart Button -->
+                            <a href="{% url 'catalog:add_to_cart' item.book.pk %}"
+                               class="btn btn-success btn-sm">
+                                Add to Cart
+                            </a>
+
+                            <!-- Remove from Wishlist Button -->
+                            <a href="{% url 'catalog:remove_from_wishlist' item.book.pk %}"
+                               class="btn btn-danger btn-sm">
+                                Remove
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p class="text-muted">Your wishlist is empty.</p>
+    {% endif %}
+
+    <a href="{% url 'catalog:index' %}" class="btn btn-secondary mt-3">← Back to Books</a>
+
+</div>
+{% endblock %}

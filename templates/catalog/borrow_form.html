@@ -1,0 +1,44 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Borrow — {{ book.title }}{% endblock %}
+
+{% block content %}
+
+<h2 class="text-center mb-4">Borrow Book</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h4 class="mb-3 text-primary">{{ book.title }}</h4>
+
+                <p><strong>Author:</strong>
+                    {% for author in book.authors.all %}
+                        {{ author.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p><strong>Available Copies:</strong> {{ book.available_copies }}</p>
+
+                <hr>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-success btn-block mt-3">
+                        Confirm Borrow
+                    </button>
+
+                    <a href="{% url 'catalog:book_detail' book.pk %}" class="btn btn-secondary btn-block mt-2">
+                        Cancel
+                    </a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

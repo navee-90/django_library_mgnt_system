@@ -1,0 +1,97 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ book.title }} — Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            {% if book.cover %}
+                <img src="{{ book.cover }}" class="card-img-top" alt="{{ book.title }}">
+            {% else %}
+                <img src="https://via.placeholder.com/400x500?text=No+Cover" class="card-img-top" alt="No cover">
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h2 class="mb-3">
+            {{ book.title }}
+
+            <!-- BADGES -->
+            {% if in_cart %}
+                <span class="badge bg-success">In Cart</span>
+            {% endif %}
+
+            {% if in_wishlist %}
+                <span class="badge bg-info text-dark">Wishlisted</span>
+            {% endif %}
+        </h2>
+
+        <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+
+        <p><strong>Authors:</strong>
+            {% for author in book.authors.all %}
+                {{ author.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+
+        <p><strong>Category:</strong> {{ book.category.name }}</p>
+
+        <hr>
+
+        <h5>Description</h5>
+        <p>{{ book.description }}</p>
+
+        <hr>
+
+        <p><strong>Total Copies:</strong> {{ book.total_copies }}</p>
+        <p><strong>Available Copies:</strong> {{ book.available_copies }}</p>
+
+        <div class="mt-4">
+            {% if user.is_authenticated %}
+
+                <!-- Borrow Button -->
+                {% if book.available_copies > 0 %}
+                    <a href="{% url 'catalog:borrow_book' book.pk %}" class="btn btn-primary mb-2">
+                        Borrow Book
+                    </a>
+                {% else %}
+                    <button class="btn btn-danger mb-2" disabled>No Copies Available</button>
+                {% endif %}
+
+                <br>
+
+                <!-- CART -->
+                {% if in_cart %}
+                    <a href="{% url 'catalog:cart' %}" class="btn btn-success mb-2">Go to Cart</a>
+                {% else %}
+                    <a href="{% url 'catalog:add_to_cart' book.pk %}" class="btn btn-warning mb-2">
+                        Add to Cart
+                    </a>
+                {% endif %}
+
+                <br>
+
+                <!-- WISHLIST -->
+                {% if in_wishlist %}
+                    <a href="{% url 'catalog:wishlist_page' %}" class="btn btn-info mb-2 text-white">
+                        View Wishlist
+                    </a>
+                {% else %}
+                    <a href="{% url 'catalog:add_to_wishlist' book.pk %}" class="btn btn-outline-info mb-2">
+                        Add to Wishlist
+                    </a>
+                {% endif %}
+
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-warning">Login to Continue</a>
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <a href="{% url 'catalog:index' %}" class="btn btn-secondary mt-3">← Back to Books</a>
+    </div>
+</div>
+{% endblock %}
